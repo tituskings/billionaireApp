@@ -1,3 +1,5 @@
+import 'package:billioniare_app/add_money_button.dart';
+import 'package:billioniare_app/balance_view.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,6 +23,13 @@ class _MyAppState extends State<MyApp> {
     });
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setDouble('balance', balance);
+  }
+
+  @override
+  void initState() {
+    // initState was introduced here to solve the problem of using button to load previous balance on the app it doesnt prevent to installation of shared preference package
+    loadBalance();
+    super.initState();
   }
 
   void loadBalance() async {
@@ -47,30 +56,8 @@ class _MyAppState extends State<MyApp> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                  flex: 9,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("Bank balance"),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Text("$balance"),
-                      OutlinedButton(
-                          onPressed: loadBalance, child: Text("Load balance"))
-                    ],
-                  ),
-                ),
-                Expanded(
-                    flex: 1,
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red[700],
-                          minimumSize: Size(double.infinity, 0),
-                        ),
-                        onPressed: addMoney,
-                        child: Text("Add money")))
+                BalanceView(balance: balance),
+                AddMoneyButton(addMoneyFunction: addMoney),
               ],
             )),
       ),
